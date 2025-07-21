@@ -6,7 +6,6 @@ import authRoutes from './src/routes/auth.routes.js';
 dotenv.config();
 
 const app = express();
-app.use(cors());
 app.use(express.json());
 const corsOptions = {
     origin: 'http://localhost:5173',
@@ -24,5 +23,5 @@ app.use('/api/auth', authRoutes);
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
-  console.log(`🚀 Server running on http://backend-inmobiliaria-app-production.up.railway.app:${port}`);
+  console.log(`🚀 Server running on port ${port}`);
 });
