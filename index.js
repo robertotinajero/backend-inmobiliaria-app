@@ -1,7 +1,7 @@
 import express, { urlencoded, json } from 'express'
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authRoutes from './src/routes/auth.routes.js';
+import routes from './src/routes/index.routes.js';
 
 dotenv.config();
 
@@ -19,7 +19,8 @@ app.use(urlencoded({ extended: true, limit: '100mb' }))
 app.use(json({ limit: '100mb' }))
 app.use(cors(corsOptions))
 
-app.use('/api/auth', authRoutes);
+// Todas las rutas centralizadas
+app.use('/api', routes);
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
