@@ -13,16 +13,18 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
+    console.log(user)
 
     const payload = {
       id_user: user.id_user,
+      fullname: `${user.firstname} ${user.lastname}`, // <-- nombre completo
       email: user.email,
       roles: user.roles.map(r => r.nm_role),
     };
 
     const token = jwt.sign(payload, process.env.SECRET_KEY, {
-      expiresIn: '1h',
-      issuer: 'http://localhost:5173', // Ajusta según entorno
+      expiresIn: '8h',
+      issuer: 'http://localhost:5174', // Ajusta según entorno
     });
 
     return res.status(200).json({
