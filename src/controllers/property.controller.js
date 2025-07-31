@@ -13,7 +13,7 @@ import {
 export async function handleGetProperties(req, res) {
   try {
     const properties = await getProperties();
-    res.json(properties);
+    res.status(200).json(properties);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener propiedades' });
@@ -30,6 +30,7 @@ export async function handleGetPropertyById(req, res) {
       return res.status(404).json({ error: 'Propiedad no encontrada' });
     }
     res.json(property);
+    res.status(200).json(property);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener propiedad' });
@@ -41,8 +42,8 @@ export async function handleGetPropertyById(req, res) {
  */
 export async function handleCreateProperty(req, res) {
   try {
-    const newId = await createProperty(req.body);
-    res.status(201).json({ id: newId });
+    const id_property = await createProperty(req.body);
+    res.status(201).json({ message: "Propiedad creada", id_property });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al crear propiedad' });
@@ -55,7 +56,7 @@ export async function handleCreateProperty(req, res) {
 export async function handleUpdateProperty(req, res) {
   try {
     await updateProperty(req.params.id, req.body);
-    res.json({ message: 'Propiedad actualizada correctamente' });
+    res.status(200).json({ message: "Propiedad actualizada" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al actualizar propiedad' });
@@ -68,7 +69,7 @@ export async function handleUpdateProperty(req, res) {
 export async function handleDeleteProperty(req, res) {
   try {
     await deleteProperty(req.params.id, req.user?.id || null);
-    res.json({ message: 'Propiedad eliminada correctamente' });
+    res.status(200).json({ message: "Propiedad eliminada" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al eliminar propiedad' });

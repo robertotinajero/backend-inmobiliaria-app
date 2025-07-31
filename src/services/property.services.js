@@ -25,20 +25,27 @@ export async function getPropertyById(id_property) {
 /**
  * Crear propiedad
  */
+// Crear propiedad
 export async function createProperty(data) {
   const [result] = await pool.query(
     `INSERT INTO tbl_properties 
-      (nm_property, type, address, description, size, phone, status, fg_active, id_user_last_modification)
-     VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)`,
+    (nm_property, type, street, colony, postal_code, municipality, state, depto, description, size, rooms, phone, status, fg_active, id_user_last_modification)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)`,
     [
       data.nm_property,
       data.type,
-      data.address,
-      data.description || null,
-      data.size || null,
-      data.phone || null,
-      data.status || 'Disponible',
-      data.id_user_last_modification || null,
+      data.street,
+      data.colony,
+      data.postal_code,
+      data.municipality,
+      data.state,
+      data.depto,
+      data.description,
+      data.size,
+      data.rooms,
+      data.phone,
+      data.status || "Disponible",
+      data.id_user_last_modification,
     ]
   );
   return result.insertId;
@@ -50,18 +57,23 @@ export async function createProperty(data) {
 export async function updateProperty(id_property, data) {
   await pool.query(
     `UPDATE tbl_properties SET
-      nm_property = ?, type = ?, address = ?, description = ?, size = ?, phone = ?, status = ?, 
-      id_user_last_modification = ?
+      nm_property = ?, type = ?, street = ?, colony = ?, postal_code = ?, municipality = ?, state = ?, depto = ?, description = ?, size = ?, rooms=?, phone = ?, status = ?, id_user_last_modification = ?
      WHERE id_property = ?`,
     [
       data.nm_property,
       data.type,
-      data.address,
-      data.description || null,
-      data.size || null,
-      data.phone || null,
-      data.status || 'Disponible',
-      data.id_user_last_modification || null,
+      data.street,
+      data.colony,
+      data.postal_code,
+      data.municipality,
+      data.state,
+      data.depto,
+      data.description,
+      data.size,
+      data.rooms,
+      data.phone,
+      data.status,
+      data.id_user_last_modification,
       id_property,
     ]
   );

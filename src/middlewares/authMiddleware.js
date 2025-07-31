@@ -11,7 +11,6 @@ export function authMiddleware(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY || 'mi_secreto');
-    console.log(decoded);
     
     req.user = decoded; // adjuntamos info del usuario al request
     next();

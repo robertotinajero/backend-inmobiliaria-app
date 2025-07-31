@@ -28,11 +28,13 @@ export async function getTenantById(id_tenant) {
 export async function createTenant(data) {
   const [result] = await pool.query(
     `INSERT INTO tbl_tenant 
-      (firstname, lastname, phone, email, fg_active, id_user_last_modification, created_at, updated_at)
-     VALUES (?, ?, ?, ?, 1, ?, NOW(), NOW())`,
+      (firstname, lastname, curp, rfc, phone, email, fg_active, id_user_last_modification, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, 1, ?, NOW(), NOW())`,
     [
       data.firstname,
       data.lastname,
+      data.curp,
+      data.rfc,
       data.phone || null,
       data.email || null,
       data.id_user_last_modification || null,
@@ -47,11 +49,13 @@ export async function createTenant(data) {
 export async function updateTenant(id_tenant, data) {
   await pool.query(
     `UPDATE tbl_tenant SET
-      firstname = ?, lastname = ?, phone = ?, email = ?, id_user_last_modification = ?, updated_at = NOW()
+      firstname = ?, lastname = ?, curp = ?, rfc = ?, phone = ?, email = ?, id_user_last_modification = ?, updated_at = NOW()
      WHERE id_tenant = ?`,
     [
       data.firstname,
       data.lastname,
+      data.curp,
+      data.rfc,
       data.phone || null,
       data.email || null,
       data.id_user_last_modification || null,
