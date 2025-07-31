@@ -17,3 +17,12 @@ CREATE TABLE tbl_properties (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+ALTER TABLE tbl_properties
+    DROP COLUMN address,
+    ADD COLUMN street VARCHAR(100) AFTER type,
+    ADD COLUMN colony VARCHAR(100) AFTER street,
+    ADD COLUMN postal_code VARCHAR(10) AFTER colony,
+    ADD COLUMN municipality VARCHAR(100) AFTER postal_code,
+    ADD COLUMN state VARCHAR(100) AFTER street,
+    ADD COLUMN depto VARCHAR(100) AFTER state;
