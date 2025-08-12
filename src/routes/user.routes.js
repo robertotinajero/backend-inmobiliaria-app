@@ -12,10 +12,10 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 const router = Router();
 
 // Rutas protegidas
-router.get("/", authMiddleware, getUsers);
-router.get("/:id", authMiddleware, getUserById);
-router.post("/", authMiddleware, createUser);
-router.put("/:id", authMiddleware, updateUser);
+router.get("/"      , authMiddleware, getUsers);
+router.get("/:id"   , authMiddleware, getUserById);
+router.post("/"     , authMiddleware, createUser);
+router.put("/:id"   , authMiddleware, updateUser);
 router.delete("/:id", authMiddleware, deleteUser);
 
 export default router;
