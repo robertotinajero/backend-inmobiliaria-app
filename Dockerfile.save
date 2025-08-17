@@ -1,0 +1,27 @@
+# Build Stage
+## Use the latest LTS version of Node.js
+FROM node:18-alpine
+
+## Crea directorio de trabajo
+WORKDIR /app
+
+## Copia dependencias
+COPY package*.json ./
+
+## Instala solo dependencias de producción
+RUN npm install
+
+## Copia el resto del código
+COPY . .
+
+RUN npm run build
+
+# Production Stage
+FROM nginx:stable-alpine AS production
+COPY --from=build /app/build /usr/share/nginx/html
+# Expose the port your app runs on
+EXPOSE 3000
+
+# Inicia la app
+CMD ["nginx", "-g", "daemon off;"]
+
