@@ -2,17 +2,25 @@ services:
   backend:
     build: .
     container_name: backend-inmobiliaria
-    restart: always
-    ports:
-      - "3000:3000"
+    restart: unless-stopped
+    #ports:
+    #  - "3000:3000"
     env_file:
+      - traefik
       - .env.production
     networks:
       - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=apis"
+      - "traefik.http.routers.node.rule=Host(`api.grupopenainmobiliaria.com`)"
+      - "traefik.http.routers.node.entrypoints=websecure"
+      - "traefik.http.routers.node.tls.certresolver=myresolver"
+      - "traefik.http.services.node.loadbalancer.server.port=3000"
 
 networks:
-  db:
-    name: inmobiliaria-vault
+  traefik:
     external: true
-    
+  db:
+    external: true
     
