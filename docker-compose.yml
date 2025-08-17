@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build: .
@@ -11,10 +9,9 @@ services:
       - .env.production
     networks:
       - db
-    depends_on:
-      - mysql
 
 networks:
   db:
     external:
       name: inmobiliaria-vault
+      external: true
