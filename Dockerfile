@@ -3,20 +3,17 @@ FROM node:18-alpine
 # Crea directorio de trabajo
 WORKDIR /app
 
-# Copia dependencias
+# Copiar package.json y package-lock.json
 COPY package*.json ./
 
 # Instala solo dependencias de producción
 RUN npm install --omit=dev
 
-# Copia el resto del código
+# Copiar el resto de los archivos del proyecto
 COPY . .
-
-# Compila la app
-RUN npm run build
 
 # Expone el puerto
 EXPOSE 3000
 
-# Inicia la app
-CMD ["node", "dist/main"]
+# Comando para ejecutar la app
+CMD ["node", "src/index.js"]
