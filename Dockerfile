@@ -1,3 +1,4 @@
+# Use the latest LTS version of Node.js
 FROM node:18-alpine
 
 # Crea directorio de trabajo
@@ -7,16 +8,14 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instala solo dependencias de producción
-RUN npm install --omit=dev
+RUN npm install
 
 # Copia el resto del código
 COPY . .
 
-# Compila la app
-RUN npm run build
-
-# Expone el puerto
+# Expose the port your app runs on
 EXPOSE 3000
 
 # Inicia la app
-CMD ["node", "dist/main"]
+#CMD ["node", "dist/main"]
+CMD ["npm", "start"]
