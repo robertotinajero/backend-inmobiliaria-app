@@ -3,47 +3,18 @@ version: '3.8'
 services:
   backend:
     build: .
-    container_name: inmobiliaria-backend
+    container_name: backend-inmobiliaria
+    restart: always
     ports:
       - "3000:3000"
     env_file:
       - .env.production
+    networks:
+      - db
     depends_on:
       - mysql
-    networks:
-      - net_inmobiliaria
-
-  mysql:
-    image: mysql:8
-    container_name: inmobiliaria-mysql
-    restart: unless-stopped
-    environment:
-      DB_HOST: bd_inmobiliaria
-      DB_PORT: 3306
-      DB_USER: admininmo
-      DB_PASSWORD: "Inmo76#VPO"
-      DB_NAME: inmob_db
-    volumes:
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    networks:
-      - net_inmobiliaria
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: inmobiliaria-pma
-    restart: unless-stopped
-    environment:
-      PMA_HOST: mysql
-      MYSQL_ROOT_PASSWORD: rootpass
-    ports:
-      - "8080:80"
-    networks:
-      - net_inmobiliaria
 
 networks:
-  net_inmobiliaria:
-
-volumes:
-  mysql_data:
+  db:
+    external:
+      name: inmobiliaria-vault
