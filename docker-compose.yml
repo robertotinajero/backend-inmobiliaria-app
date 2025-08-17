@@ -20,4 +20,5 @@ networks:
   traefik:
     external: true
   db:
+    name: inmobiliaria-vault
     external: true
