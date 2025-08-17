@@ -45,5 +45,5 @@ app.use('/api', routes);
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
-  console.log(`Listen on: http://localhost:${port}`)
+  console.log(`✅ Backend escuchando en ${process.env.BASE_URL || `http://localhost:${port}`} - Entorno: ${process.env.NODE_ENV}`);
 });
