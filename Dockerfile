@@ -4,18 +4,17 @@ FROM node:18-alpine
 # Crea directorio de trabajo
 WORKDIR /app
 
-# Copia dependencias
+# Copiar package.json y package-lock.json
 COPY package*.json ./
 
 # Instala solo dependencias de producción
 RUN npm install
 
-# Copia el resto del código
+# Copiar el resto de los archivos del proyecto
 COPY . .
 
-# Expose the port your app runs on
+# Expone el puerto
 EXPOSE 3000
 
-# Inicia la app
-#CMD ["node", "dist/main"]
-CMD ["npm", "start"]
+# Comando para ejecutar la app
+CMD ["node", "src/index.js"]x
