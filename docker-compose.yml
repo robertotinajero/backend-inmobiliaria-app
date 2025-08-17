@@ -12,6 +12,7 @@ services:
 
 networks:
   db:
-    external:
-      name: inmobiliaria-vault
-      external: true
+    name: inmobiliaria-vault
+    external: true
+    
+    
