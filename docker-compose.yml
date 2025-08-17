@@ -1,3 +1,4 @@
+version: "3.8"
 services:
   backend:
     build: .
@@ -6,10 +7,10 @@ services:
     env_file:
       - .env.production
     networks:
+      - traefik
       - db
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=apis"
       - "traefik.http.routers.node.rule=Host(`api.grupopenainmobiliaria.com`)"
       - "traefik.http.routers.node.entrypoints=websecure"
       - "traefik.http.routers.node.tls.certresolver=myresolver"
