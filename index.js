@@ -19,6 +19,9 @@ app.use(urlencoded({ extended: true, limit: '100mb' }))
 app.use(json({ limit: '100mb' }))
 app.use(cors(corsOptions))
 
+// Ruta de monitoreo
+app.get('/health', (req, res) => res.json({ ok: true }));
+
 // Todas las rutas centralizadas
 app.use('/api', routes);
 
