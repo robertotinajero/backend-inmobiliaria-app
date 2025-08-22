@@ -22,7 +22,7 @@ app.use(cors(corsOptions))
 // Todas las rutas centralizadas
 app.use('/api', routes);
 
-const port = process.env.PORT || 8080;
+const port = 3000;
 app.listen(port, () => {
   console.log(`Listen on: http://localhost:${port}`)
 });

@@ -5,6 +5,7 @@ import contractRoutes from './contract.routes.js';
 import propertyRoutes from './property.routes.js';
 import tenantRoutes from './tenant.routes.js';
 import landlordRoutes from './landlord.routes.js';
+import roleRoutes from './roles.routes.js';
 
 const router = Router();
 
@@ -15,5 +16,6 @@ router.use('/contracts' , contractRoutes);
 router.use('/properties', propertyRoutes);
 router.use('/tenants'   , tenantRoutes);
 router.use('/landlords' , landlordRoutes);
+router.use('/roles'     , roleRoutes);
 
 export default router;
