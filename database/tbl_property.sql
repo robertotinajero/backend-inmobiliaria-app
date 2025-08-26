@@ -10,6 +10,7 @@ CREATE TABLE tbl_properties (
     depto VARCHAR(100) NOT NULL,
     description TEXT,
     size DECIMAL(10,2),
+    rooms TINYINT UNSIGNED NOT NULL DEFAULT 0,
     phone VARCHAR(15),
     status ENUM('Disponible','Ocupado','Mantenimiento') DEFAULT 'Disponible',
     fg_active INT(11) NOT NULL,
@@ -19,6 +20,7 @@ CREATE TABLE tbl_properties (
 );
 
 ALTER TABLE tbl_properties
+  ADD COLUMN rooms TINYINT UNSIGNED NOT NULL DEFAULT 0 AFTER size;
     DROP COLUMN address,
     ADD COLUMN street VARCHAR(100) AFTER type,
     ADD COLUMN colony VARCHAR(100) AFTER street,

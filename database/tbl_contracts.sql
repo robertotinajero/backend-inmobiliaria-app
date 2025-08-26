@@ -8,6 +8,7 @@ CREATE TABLE tbl_contract (
     payment_day                 INT NOT NULL,
     penalty                     DECIMAL(10, 2),
     status                      ENUM('Activo','Vencido','Finalizado','Cancelado') DEFAULT 'Activo',
+    id_contract_status          INT NOT NULL DEFAULT 1,
     id_landlord                 INT NOT NULL,
     id_tenant                   INT NOT NULL,
     id_property                 INT NOT NULL,
@@ -20,5 +21,5 @@ CREATE TABLE tbl_contract (
     FOREIGN KEY (id_contract_status) REFERENCES tbl_contract_status(id_contract_status),
     FOREIGN KEY (id_landlord) REFERENCES tbl_landlord(id_landlord),
     FOREIGN KEY (id_tenant) REFERENCES tbl_tenant(id_tenant),
-    FOREIGN KEY (id_property) REFERENCES tbl_properties(id_property),
+    FOREIGN KEY (id_property) REFERENCES tbl_properties(id_property)
 );
