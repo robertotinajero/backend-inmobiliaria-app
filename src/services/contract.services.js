@@ -1,5 +1,6 @@
 // services/contract.services.js
 import { pool } from '../config/db.js';
+import { createScheduledPayments } from './payments.service.js';
 
 /**
  * Obtener todos los contratos activos
@@ -67,7 +68,17 @@ export async function createContract(data) {
       data.id_user_last_modification || null,
     ]
   );
-  return result.insertId;
+  const id_contract = result.insertId;
+
+  // 2. Generar pagos programados
+  await createScheduledPayments({
+    id_contract,
+    start_date: data.dt_start,
+    end_date: data.dt_end,
+    monthly_rent: data.monthly_rent,
+  });
+
+  return { id_contract };
 }
 
 /**
