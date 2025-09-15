@@ -38,6 +38,11 @@ export const remove = async (id) => {
   return result;
 };
 
+export const getPaymentById = async (id_payment) => {
+  const [rows] = await pool.query('SELECT * FROM tbl_payments WHERE id_payment = ?', [id_payment]);
+  return rows[0] || null;
+};
+
 export const createScheduledPayments = async ({ id_contract, start_date, end_date, monthly_rent }) => {
   // Verificar si ya existen pagos
   const [existing] = await pool.query(
@@ -83,8 +88,6 @@ export const createScheduledPayments = async ({ id_contract, start_date, end_dat
   return { inserted: result.affectedRows };
 };
 
-
-
 export const updatePaymentStatuses = async () => {
   // Pagado
   await pool.query(`
@@ -114,5 +117,19 @@ export const updatePaymentStatuses = async () => {
     WHERE amount_paid = 0 AND due_date >= CURDATE()
   `);
 };
+
+export async function saveReceiptInfo({ id_payment, filename, originalname, url }) {
+  // Si tu tabla no tiene estas columnas, ver SQL más abajo
+  const [res] = await pool.query(
+    `UPDATE tbl_payments 
+       SET receipt_filename = ?, 
+           receipt_originalname = ?, 
+           receipt_url = ?, 
+           receipt_uploaded_at = NOW()
+     WHERE id_payment = ?`,
+    [filename, originalname, url, id_payment]
+  );
+  return res.affectedRows === 1;
+}
 
 
