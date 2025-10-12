@@ -2,6 +2,7 @@
 import {
   getContracts,
   getContractById,
+  getLastFolio,
   createContract,
   updateContract,
   deleteContract,
@@ -27,6 +28,7 @@ export async function handleGetContractById(req, res) {
   try {
     const contract = await getContractById(req.params.id);
     if (!contract) {
+      console.error(contract);
       return res.status(404).json({ error: 'Contrato no encontrado' });
     }
     res.json(contract);
@@ -35,6 +37,20 @@ export async function handleGetContractById(req, res) {
     res.status(500).json({ error: 'Error al obtener contrato' });
   }
 }
+
+/**
+ * GET /contracts/last-folio
+ */
+export async function handleGetLastFolio(req, res) {
+  try {
+    const result = await getLastFolio();
+    console.log('Último folio:', result);
+    res.json(result);
+  } catch (error) {
+    console.error('Error al obtener último folio:', error);
+    res.status(500).json({ error: 'Error al generar folio' });
+  }
+};
 
 /**
  * POST /contracts

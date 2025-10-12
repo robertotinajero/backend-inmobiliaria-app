@@ -1,11 +1,14 @@
 // controllers/tenant.controller.js
+import path from 'path';
+import fs from 'fs';
 import {
   getTenants,
   getTenantById,
-  createTenant,
+  createTenantWithFiles,
   updateTenant,
   deleteTenant,
 } from '../services/tenant.services.js';
+
 
 /**
  * GET /tenants
@@ -41,8 +44,8 @@ export async function handleGetTenantById(req, res) {
  */
 export async function handleCreateTenant(req, res) {
   try {
-    const newId = await createTenant(req.body);
-    res.status(201).json({ id: newId });
+    const tenant = await createTenantWithFiles(req);
+    res.status(201).json(tenant);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al crear inquilino' });
@@ -74,3 +77,45 @@ export async function handleDeleteTenant(req, res) {
     res.status(500).json({ error: 'Error al eliminar inquilino' });
   }
 }
+
+export async function handleDownloadTenantFile(req, res) {
+  try {
+    const { id, file } = req.params;
+
+    const tenantFolder = path.join(process.cwd(), `uploads/tenants/${id}`);
+    const filePath = path.join(tenantFolder, file);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Archivo no encontrado' });
+    }
+
+    res.download(filePath); // esto fuerza la descarga
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al descargar archivo' });
+  }
+}
+
+export async function getFileInfo(req, res) {
+  try {
+    const { id, filename } = req.params;
+
+    const tenantFolder = path.join(process.cwd(), `uploads/tenants/${id}`);
+    const filePath = path.join(tenantFolder, filename);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: "Archivo no encontrado" });
+    }
+
+    const stats = fs.statSync(filePath);
+    const ext = path.extname(filename).replace(".", "").toUpperCase();
+
+    res.json({
+      name: filename,
+      sizeMB: (stats.size / (1024 * 1024)).toFixed(2),
+      extension: ext,
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Error al obtener información del archivo" });
+  }
+};

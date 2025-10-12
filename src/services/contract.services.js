@@ -42,6 +42,38 @@ export async function getContractById(id_contract) {
 }
 
 /**
+ * Obtiene el ultimo folio de un contracto
+ */
+export async function getLastFolio() {
+  const [rows] = await pool.query(
+    `SELECT folio 
+     FROM tbl_contract 
+     WHERE folio IS NOT NULL 
+     ORDER BY id_contract DESC 
+     LIMIT 1`
+  );
+
+  if (rows.length === 0) {
+    // Si no hay contratos aún, empezamos desde cero
+    const year = new Date().getFullYear();
+    const nextFolio = `CT-${year}-0001`;
+    return { folio: nextFolio };
+  }
+
+  const lastFolio = rows[0].folio; // ej: "CT-2025-0007"
+  const parts = lastFolio.split('-');
+  const year = new Date().getFullYear();
+
+  let nextNumber = 1;
+  if (parts.length >= 3) {
+    nextNumber = parseInt(parts[2]) + 1;
+  }
+
+  const nextFolio = `CT-${year}-${String(nextNumber).padStart(4, '0')}`;
+  return { folio: nextFolio };
+};
+
+/**
  * Crear contrato
  */
 export async function createContract(data) {

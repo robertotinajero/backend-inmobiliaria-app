@@ -13,3 +13,9 @@ CREATE TABLE tbl_payments (
     FOREIGN KEY (id_contract) REFERENCES tbl_contract(id_contract)
     ON DELETE CASCADE
 );
+
+ALTER TABLE tbl_payments
+  ADD COLUMN receipt_filename VARCHAR(255) NULL,
+  ADD COLUMN receipt_originalname VARCHAR(255) NULL,
+  ADD COLUMN receipt_url VARCHAR(500) NULL,
+  ADD COLUMN receipt_uploaded_at DATETIME NULL;

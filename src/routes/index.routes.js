@@ -8,6 +8,7 @@ import landlordRoutes from './landlord.routes.js';
 import departmentRoutes from './department.routes.js';
 import roleRoutes from './roles.routes.js';
 import paymentsRoutes from './payments.routes.js';
+import unitsRoutes from './units.routes.js';
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.use('/landlords'     , landlordRoutes);
 router.use('/departments'   , departmentRoutes);
 router.use('/roles'         , roleRoutes);
 router.use('/payments'      , paymentsRoutes);
+router.use("/units"         , unitsRoutes);
 
 export default router;
