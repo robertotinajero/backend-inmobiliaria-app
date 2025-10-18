@@ -13,11 +13,14 @@ import {
  */
 export async function handleGetContracts(req, res) {
   try {
-    const contracts = await getContracts();
-    res.json(contracts);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener contratos' });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || "";
+    const result = await getContracts(page, limit, search);
+    res.json(result);
+  } catch (err) {
+    console.error("Error al obtener contratos:", err);
+    res.status(500).json({ error: "Error al obtener contratos" });
   }
 }
 

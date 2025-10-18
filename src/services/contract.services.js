@@ -5,7 +5,7 @@ import { createScheduledPayments } from './payments.service.js';
 /**
  * Obtener todos los contratos activos
  */
-export async function getContracts() {
+export async function getAllContracts() {
   const [rows] = await pool.query(
     `SELECT 
       c.*, 
@@ -16,10 +16,71 @@ export async function getContracts() {
     INNER JOIN tbl_landlord l ON c.id_landlord = l.id_landlord
     INNER JOIN tbl_tenant t ON c.id_tenant = t.id_tenant
     INNER JOIN tbl_properties p ON c.id_property = p.id_property
-    WHERE c.fg_active = 1`
+    WHERE c.fg_active = 1 ORDER BY c.dt_timestamp DESC`
   );
   return rows;
 }
+
+/**
+ * Obtener todos los contratos con paginador
+ */
+export async function getContracts(page = 1, limit = 10, search = "") {
+  const offset = (page - 1) * limit;
+  let where = "WHERE c.fg_active = 1";
+
+  if (search) {
+    const like = `%${search}%`;
+    where += ` AND (
+      c.folio LIKE ? OR
+      l.firstname LIKE ? OR l.lastname LIKE ? OR
+      t.firstname LIKE ? OR t.lastname LIKE ? OR
+      p.nm_property LIKE ?
+    )`;
+  }
+
+  const params = search ? [like, like, like, like, like, like, limit, offset] : [limit, offset];
+
+  const [rows] = await pool.query(
+    `
+    SELECT 
+      c.*, 
+      CONCAT(l.firstname, ' ', l.lastname) AS landlord_name,
+      CONCAT(t.firstname, ' ', t.lastname) AS tenant_name,
+      p.nm_property AS property_name
+    FROM tbl_contract c
+    INNER JOIN tbl_landlord l ON c.id_landlord = l.id_landlord
+    INNER JOIN tbl_tenant t ON c.id_tenant = t.id_tenant
+    INNER JOIN tbl_properties p ON c.id_property = p.id_property
+    ${where}
+    ORDER BY c.id_contract DESC
+    LIMIT ? OFFSET ?
+    `,
+    params
+  );
+
+  // Obtener total de registros para calcular totalPages
+  const [countRows] = await pool.query(
+    `
+    SELECT COUNT(*) AS total
+    FROM tbl_contract c
+    INNER JOIN tbl_landlord l ON c.id_landlord = l.id_landlord
+    INNER JOIN tbl_tenant t ON c.id_tenant = t.id_tenant
+    INNER JOIN tbl_properties p ON c.id_property = p.id_property
+    ${where.replace(/\?/g, "'%'")} 
+    `,
+    search ? [like, like, like, like, like, like] : []
+  );
+
+  const total = countRows[0].total;
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    items: rows,
+    total,
+    totalPages,
+  };
+}
+
 
 /**
  * Obtener contrato por ID
@@ -79,11 +140,12 @@ export async function getLastFolio() {
 export async function createContract(data) {
   const [result] = await pool.query(
     `INSERT INTO tbl_contract 
-      (folio, dt_start, dt_end, monthly_rent, security_deposit, payment_day, penalty, status, 
+      (folio, contract_type, dt_start, dt_end, monthly_rent, security_deposit, payment_day, penalty, status, 
        id_landlord, id_tenant, id_property, guarantor_name, guarantor_contact, notes, fg_active, id_user_last_modification, dt_timestamp)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, NOW())`,
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, NOW())`,
     [
       data.folio,
+      data.contract_type,
       data.dt_start,
       data.dt_end || null,
       data.monthly_rent,
@@ -119,12 +181,13 @@ export async function createContract(data) {
 export async function updateContract(id_contract, data) {
   await pool.query(
     `UPDATE tbl_contract SET
-      folio = ?, dt_start = ?, dt_end = ?, monthly_rent = ?, security_deposit = ?, payment_day = ?, penalty = ?, status = ?,
+      folio = ?, contract_type = ?, dt_start = ?, dt_end = ?, monthly_rent = ?, security_deposit = ?, payment_day = ?, penalty = ?, status = ?,
       id_landlord = ?, id_tenant = ?, id_property = ?, guarantor_name = ?, guarantor_contact = ?, notes = ?, 
       id_user_last_modification = ?, dt_timestamp = NOW()
      WHERE id_contract = ?`,
     [
       data.folio,
+      data.contract_type,
       data.dt_start,
       data.dt_end || null,
       data.monthly_rent,

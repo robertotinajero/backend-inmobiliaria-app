@@ -5,7 +5,8 @@ CREATE TABLE tbl_units (
   type                      VARCHAR(50),             -- tipo: "Edificio", "Departamento", "Local"
   size                      INT,                     -- m²
   rooms                     INT,                     -- opcional
-  address                   VARCHAR(255),            -- opcional (solo para unidades raíz)
+  street                    VARCHAR(255),            -- opcional (solo para unidades raíz)
+  colony                    VARCHAR(100),
   municipality              VARCHAR(100),
   state                     VARCHAR(100),
   postal_code               VARCHAR(10),

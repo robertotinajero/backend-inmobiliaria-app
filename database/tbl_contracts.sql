@@ -23,3 +23,6 @@ CREATE TABLE tbl_contract (
     FOREIGN KEY (id_tenant) REFERENCES tbl_tenant(id_tenant),
     FOREIGN KEY (id_property) REFERENCES tbl_properties(id_property)
 );
+
+ALTER TABLE tbl_contract
+  ADD COLUMN contract_type ENUM('Alquiler','Venta') NOT NULL AFTER folio;
